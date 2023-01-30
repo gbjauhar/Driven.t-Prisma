@@ -18,6 +18,12 @@ async function getTickets(userId: number) {
   return tickets;
 }
 
+async function postTicket(ticketTypeId: number, enrollmentId: number) {
+  const ticket = await ticketRepository.create(ticketTypeId, enrollmentId);
+  if(!ticket) throw notFoundError();
+  return ticket;
+}
+
 async function updateTicket(ticketId: number) {
   const ticket = await ticketRepository.update(ticketId);
   if(!ticket) throw notFoundError();
@@ -27,6 +33,7 @@ async function updateTicket(ticketId: number) {
 const ticketsService = {
   getTicketTypes,
   getTickets,
+  postTicket,
   updateTicket,
 };
 

@@ -11,8 +11,14 @@ export async function getPayment(req: AuthenticatedRequest, res: Response) {
     if(!ticketId) return res.sendStatus(400);
     const payment = await paymentService.getPayment(Number(ticketId));
     return res.status(httpStatus.OK).send(payment);
-  } catch(err) {
-    return res.status(httpStatus.NOT_FOUND).send({});
+  }catch(err) {
+    if(err.name === "UnauthorizedError") {
+      return res.status(httpStatus.UNAUTHORIZED).send(err.message);
+    }
+    if(err.name === "NotFoundError" || err.name === "Error") {
+      return res.status(httpStatus.NOT_FOUND).send(err.message);
+    }
+    return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 }
 
@@ -25,7 +31,13 @@ export async function postPayment(req: AuthenticatedRequest, res: Response) {
     await ticketsService.updateTicket(ticketId);
     return res.send(payment);
   }catch(err) {
-    return res.sendStatus(400);
+    if(err.name === "UnauthorizedError") {
+      return res.status(httpStatus.UNAUTHORIZED).send(err.message);
+    }
+    if(err.name === "NotFoundError" || err.name === "Error") {
+      return res.status(httpStatus.NOT_FOUND).send(err.message);
+    }
+    return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 }
 
