@@ -4,8 +4,8 @@ async function findMany() {
   return prisma.ticketType.findMany();
 }
 
-async function findUnique(id: number) {
-  return prisma.ticket.findUnique({ where: { id: id } });
+async function findUnique(enrollmentId: number) {
+  return prisma.ticket.findMany({ where: { enrollmentId: enrollmentId }, include: { TicketType: true } });
 }
 
 const ticketRepository = {

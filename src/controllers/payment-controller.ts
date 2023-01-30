@@ -6,6 +6,7 @@ import { Response } from "express";
 export async function getPayment(req: AuthenticatedRequest, res: Response) {
   const { ticketId } = req.query;
   try {
+    if(!req) return res.sendStatus(401);
     if(!ticketId) return res.sendStatus(400);
     const payment = await paymentService.getPayment(Number(ticketId));
     return res.status(httpStatus.OK).send(payment);
